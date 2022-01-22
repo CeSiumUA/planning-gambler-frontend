@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import {RemotehubConnectorService} from "../services/remotehub.connector.service";
+import {AuthenticationService} from "../services/authentication.service";
+import {MatDialog} from "@angular/material/dialog";
+import {CreateComponent} from "./dialogs/create/create.component";
+import {JoinComponent} from "./dialogs/join/join.component";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +12,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'planning-gambler-frontend';
+  constructor(private matDialog: MatDialog) {
+  }
+  openCreateRoomDialog(){
+    this.matDialog.open(CreateComponent);
+  }
+  openJoinRoomDialog(){
+    this.matDialog.open(JoinComponent);
+  }
 }

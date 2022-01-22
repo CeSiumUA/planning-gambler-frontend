@@ -2,6 +2,6 @@
   <mat-icon>{{t.menuOpen ? 'close' : 'play_arrow'}}</mat-icon>
 </button>
 <mat-menu #aboveMenu="matMenu" yPosition="above">
-  <button mat-menu-item>Create room</button>
-  <button mat-menu-item>Join room</button>
+  <button mat-menu-item (click)="openCreateRoomDialog()">Create room</button>
+  <button mat-menu-item (click)="openJoinRoomDialog()">Join room</button>
 </mat-menu>
