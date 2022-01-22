@@ -1,8 +1,8 @@
 export interface RoomRequest{
-  DisplayName: string
-  RoomPassword: string|undefined
+  displayName: string
+  roomPassword: string|undefined
 }
 
 export interface JoinRoomRequest extends RoomRequest{
-  RoomId: string
+  roomId: string
 }

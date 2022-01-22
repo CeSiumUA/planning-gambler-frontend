@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {RemotehubConnectorService} from "../services/remotehub.connector.service";
+import {RemoteHubConnectorService} from "../services/remotehub.connector.service";
 import {AuthenticationService} from "../services/authentication.service";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateComponent} from "./dialogs/create/create.component";

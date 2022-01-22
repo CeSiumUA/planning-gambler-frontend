@@ -1,8 +1,8 @@
 export interface RoomToken{
-  Token: string
-  DisplayName: string
-  ExpireAt: string
-  MemberType: number
-  RoomId: string
-  UserId: string
+  token: string
+  displayName: string
+  expireAt: string
+  memberType: number
+  roomId: string
+  userId: string
 }

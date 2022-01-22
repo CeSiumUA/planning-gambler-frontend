@@ -15,10 +15,12 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { RoomComponent } from './room/room.component';
 import {RouterModule, Routes} from "@angular/router";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {RoomGuard} from "../services/room.guard";
 
 const routes: Routes = [
   {
-    path: 'room', component: RoomComponent
+    path: 'room', component: RoomComponent, canActivate: [RoomGuard]
   }
 ];
 
@@ -41,6 +43,7 @@ const routes: Routes = [
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
+    MatSnackBarModule,
     RouterModule.forRoot(routes)
   ],
   providers: [],
