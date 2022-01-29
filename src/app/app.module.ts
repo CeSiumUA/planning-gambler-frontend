@@ -17,6 +17,7 @@ import { RoomComponent } from './room/room.component';
 import {RouterModule, Routes} from "@angular/router";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {RoomGuard} from "../services/room.guard";
+import {MatStepperModule} from "@angular/material/stepper";
 
 const routes: Routes = [
   {
@@ -31,21 +32,22 @@ const routes: Routes = [
     JoinComponent,
     RoomComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatSnackBarModule,
-    RouterModule.forRoot(routes)
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatSnackBarModule,
+        RouterModule.forRoot(routes),
+        MatStepperModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
