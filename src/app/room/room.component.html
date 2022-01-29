@@ -1,0 +1,23 @@
+<div style="width: 200px; float: right">
+  <h2 style="text-align: center">Stages</h2>
+  <mat-stepper #stepper (selectionChange)="updateStep($event)" orientation="vertical">
+    <mat-step *ngFor="let stage of roomService.stages">
+      <ng-template matStepLabel>{{stage.title}}</ng-template>
+      <ng-template matStepContent>
+        <button mat-button matStepperNext>Next</button>
+      </ng-template>
+    </mat-step>
+  </mat-stepper>
+  <button mat-button style="width: 100%" [matMenuTriggerFor]="menu">
+    <mat-icon>
+      add
+    </mat-icon>
+  </button>
+  <mat-menu #menu="matMenu" style="width: 100px">
+    <mat-form-field (click) = "$event.stopPropagation()">
+      <mat-label>Stage title</mat-label>
+      <input #stageTitleInput matInput placeholder="Title" value="">
+    </mat-form-field>
+    <button (click)="createStage(stageTitleInput.value)" style="width: 100%; text-align: center" mat-menu-item>Create</button>
+  </mat-menu>
+</div>

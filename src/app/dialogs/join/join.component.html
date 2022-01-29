@@ -1,0 +1,22 @@
+<h3 mat-dialog-title>Enter joining details</h3>
+<form mat-dialog-content [formGroup]="joinForm">
+  <mat-form-field style="width: 100%">
+    <mat-label>Display name</mat-label>
+    <input matInput name="displayName" formControlName="displayName" />
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <mat-label>Room number</mat-label>
+    <input matInput name="roomId" formControlName="roomId" />
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <mat-label>Room password</mat-label>
+    <input matInput name="roomPassword" formControlName="roomPassword" />
+  </mat-form-field>
+  <mat-form-field *ngIf="errorMessage" appearance="outline" style="width: 100%;">
+    <input matInput readonly="true" style="color: red" [value]="errorMessage"/>
+  </mat-form-field>
+</form>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button (click)="joinRoom()">Join</button>
+</div>
