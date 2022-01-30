@@ -18,6 +18,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {RoomGuard} from "../services/room.guard";
 import {MatStepperModule} from "@angular/material/stepper";
+import {MatCardModule} from "@angular/material/card";
 
 const routes: Routes = [
   {
@@ -46,7 +47,8 @@ const routes: Routes = [
         ReactiveFormsModule,
         MatSnackBarModule,
         RouterModule.forRoot(routes),
-        MatStepperModule
+        MatStepperModule,
+        MatCardModule
     ],
   providers: [],
   bootstrap: [AppComponent]

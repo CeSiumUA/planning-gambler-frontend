@@ -16,6 +16,7 @@ export class RoomService {
   /*public get planningStages(): Stage[]{
     return this.stages;
   }*/
+  private stepUpdater: any;
   private get roomClaims(): RoomToken{
     return JSON.parse(localStorage.getItem('auth_token')??'');
   }
@@ -24,9 +25,15 @@ export class RoomService {
   public roomId: string|undefined;
   constructor(private hubConnectionService: RemoteHubConnectorService, private snackBar: MatSnackBar) {
     this.registerHandlers();
+    let tokenInfo: RoomToken = this.roomClaims;
+    let currentParticipant: Participant = {
+      displayName: tokenInfo.displayName,
+      id: tokenInfo.userId,
+      memberType: tokenInfo.memberType
+    }
   }
 
-  public fetchRoom(): Promise<void>{
+  public async fetchRoom(): Promise<void>{
     return this.hubConnectionService.fetchRoom().then(result => {
       this.stages = result.stages;
       this.participants = result.participants;
@@ -74,6 +81,7 @@ export class RoomService {
   }
   public handleStageSelected(stageId: string){
     this.currentStage = this.stages.filter(l => l.id === stageId)[0];
+    this.stepUpdater();
   }
   public handleCountDown(i: number){
 
@@ -85,7 +93,7 @@ export class RoomService {
 
   }
   public registerStepUpdate(updater: any){
-    updater();
+    this.stepUpdater = updater;
   }
   private registerHandlers(){
     this.hubConnectionService.connectionInstance.on('ParticipantConnected', (participant: Participant) => {
@@ -99,7 +107,9 @@ export class RoomService {
     this.hubConnectionService.connectionInstance.on('StageCreated', (stageCreated: NewStageResult) => {
       this.handleStageCreated(stageCreated);
     });
-    this.hubConnectionService.connectionInstance.on('StageSelected', this.handleStageSelected);
+    this.hubConnectionService.connectionInstance.on('StageSelected', (stageId: string) => {
+      this.handleStageSelected(stageId);
+    });
     this.hubConnectionService.connectionInstance.on('CountDown', this.handleCountDown);
     this.hubConnectionService.connectionInstance.on('StageVotingResult', this.handleStageVotingResult);
     this.hubConnectionService.connectionInstance.on('ParticipantVoted', this.handleParticipantVoted);

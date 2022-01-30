@@ -21,3 +21,11 @@
     <button (click)="createStage(stageTitleInput.value)" style="width: 100%; text-align: center" mat-menu-item>Create</button>
   </mat-menu>
 </div>
+
+<div>
+  <mat-card style="max-width: 100px" *ngFor="let participant of roomService.participants">
+    <mat-card-header>
+      <mat-card-title>{{participant.displayName}}</mat-card-title>
+    </mat-card-header>
+  </mat-card>
+</div>

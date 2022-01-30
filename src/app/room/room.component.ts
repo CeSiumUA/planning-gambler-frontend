@@ -27,9 +27,11 @@ export class RoomComponent implements OnInit {
     this.roomService.createStage(title);
   }
 
-  updateStep(event: StepperSelectionEvent) {
+  async updateStep(event: StepperSelectionEvent) {
     const res = this.roomService.selectStage(event.selectedIndex).valueOf();
-
+    if(!res && this.stepper !== undefined){
+      this.stepper.selectedIndex = event.previouslySelectedIndex;
+    }
   }
 
 
