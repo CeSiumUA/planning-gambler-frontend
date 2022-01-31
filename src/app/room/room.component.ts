@@ -3,6 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {RoomService} from "../../services/room.service";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {MatStepper} from "@angular/material/stepper";
+import {Participant} from "../../models/participant";
 
 @Component({
   selector: 'app-room',
@@ -12,7 +13,7 @@ import {MatStepper} from "@angular/material/stepper";
 export class RoomComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper|undefined;
-  constructor(public roomService: RoomService, private activatedRoute: ActivatedRoute) {
+  constructor(public roomService: RoomService) {
     this.roomService.registerStepUpdate(() => {
       if (this.stepper !== undefined) {
         const stageIndex = this.roomService.stages.findIndex(l => l.id === this.roomService.currentStage?.id);
@@ -34,6 +35,15 @@ export class RoomComponent implements OnInit {
     }
   }
 
+  getImageSrc(participant: Participant): string{
+    if(participant.isVoted === true && participant.voteResult === undefined){
+      return `assets/numbers/voted.png`;
+    }
+    if(participant.isVoted === true && participant.voteResult !== undefined){
+      return `assets/numbers/${participant.voteResult}.png`;
+    }
+    return '';
+  }
 
   async ngOnInit(): Promise<void> {
     await this.roomService.fetchRoom().then(() => {

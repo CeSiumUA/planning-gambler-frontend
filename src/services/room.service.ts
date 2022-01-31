@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Participant} from "../models/participant";
+import {Participant, ParticipantsChange} from "../models/participant";
 import {NewStageResult} from "../models/newStageResult";
 import {HiddenVotingResult, VotingResult} from "../models/vote";
 import {RemoteHubConnectorService} from "./remotehub.connector.service";
@@ -17,7 +17,7 @@ export class RoomService {
     return this.stages;
   }*/
   private stepUpdater: any;
-  private get roomClaims(): RoomToken{
+  private static get roomClaims(): RoomToken{
     return JSON.parse(localStorage.getItem('auth_token')??'');
   }
   public participants: Participant[] = [];
@@ -25,7 +25,7 @@ export class RoomService {
   public roomId: string|undefined;
   constructor(private hubConnectionService: RemoteHubConnectorService, private snackBar: MatSnackBar) {
     this.registerHandlers();
-    let tokenInfo: RoomToken = this.roomClaims;
+    let tokenInfo: RoomToken = RoomService.roomClaims;
     let currentParticipant: Participant = {
       displayName: tokenInfo.displayName,
       id: tokenInfo.userId,
@@ -43,7 +43,7 @@ export class RoomService {
   }
 
   public selectStage(stageNumber: number): boolean | Promise<boolean>{
-    if(this.roomClaims.memberType != 0){
+    if(RoomService.roomClaims.memberType != 0){
       return false;
     }
     return this.hubConnectionService.selectStage(this.stages[stageNumber].id).then(() => true, () => false);
@@ -55,20 +55,11 @@ export class RoomService {
     });
   }
 
-  public add(participant: Participant): void{
-    let alreadyContains = this.participants.some(value => {
-      return value.id === participant.id && value.displayName === participant.displayName;
-    })
-    if(!alreadyContains){
-      this.participants.push(participant)
-    }
+  public add(participantsChange: ParticipantsChange): void{
+    this.participants = participantsChange.participants;
   }
-  public remove(participant: Participant): void{
-    let foundParticipants = this.participants.filter(p => p.id == participant.id && p.displayName == participant.displayName);
-    if(foundParticipants.length === 1){
-      let participantIndex = this.participants.indexOf(foundParticipants[0]);
-      this.participants = this.participants.splice(participantIndex, 1);
-    }
+  public remove(participantsChange: ParticipantsChange): void{
+    this.participants = participantsChange.participants;
   }
   public handleStageCreated(newStage: NewStageResult): void{
     const stage: Stage = {
@@ -90,19 +81,22 @@ export class RoomService {
 
   }
   public handleParticipantVoted(hiddenVotingResult: HiddenVotingResult){
-
+    let filtered = this.participants.filter(x => x.id === hiddenVotingResult.userId);
+    if(filtered.length === 1){
+      filtered[0].isVoted = true;
+    }
   }
   public registerStepUpdate(updater: any){
     this.stepUpdater = updater;
   }
   private registerHandlers(){
-    this.hubConnectionService.connectionInstance.on('ParticipantConnected', (participant: Participant) => {
-      this.add(participant);
-      this.showSnackbarMessage(`${participant.displayName} has joined the room`);
+    this.hubConnectionService.connectionInstance.on('ParticipantConnected', (participantsChange: ParticipantsChange) => {
+      this.add(participantsChange);
+      this.showSnackbarMessage(`${participantsChange.affectedParticipant.displayName} has joined the room`);
     });
-    this.hubConnectionService.connectionInstance.on('ParticipantDisconnected', (participant: Participant) => {
-      this.remove(participant);
-      this.showSnackbarMessage(`${participant.displayName} has left the room`);
+    this.hubConnectionService.connectionInstance.on('ParticipantDisconnected', (participantsChange: ParticipantsChange) => {
+      this.remove(participantsChange);
+      this.showSnackbarMessage(`${participantsChange.affectedParticipant.displayName} has left the room`);
     });
     this.hubConnectionService.connectionInstance.on('StageCreated', (stageCreated: NewStageResult) => {
       this.handleStageCreated(stageCreated);
@@ -112,7 +106,9 @@ export class RoomService {
     });
     this.hubConnectionService.connectionInstance.on('CountDown', this.handleCountDown);
     this.hubConnectionService.connectionInstance.on('StageVotingResult', this.handleStageVotingResult);
-    this.hubConnectionService.connectionInstance.on('ParticipantVoted', this.handleParticipantVoted);
+    this.hubConnectionService.connectionInstance.on('ParticipantVoted', (result: HiddenVotingResult) => {
+      this.handleParticipantVoted(result);
+    });
   }
 
   private showSnackbarMessage(text: string){

@@ -22,10 +22,13 @@
   </mat-menu>
 </div>
 
-<div>
-  <mat-card style="max-width: 100px" *ngFor="let participant of roomService.participants">
+<div style="">
+  <mat-card class="voting-card" *ngFor="let participant of roomService.participants">
     <mat-card-header>
       <mat-card-title>{{participant.displayName}}</mat-card-title>
     </mat-card-header>
+    <mat-card-content class="voting-card-content">
+      <img [src]="getImageSrc(participant)" alt="1">
+    </mat-card-content>
   </mat-card>
 </div>

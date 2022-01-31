@@ -1,0 +1,10 @@
+.voting-card{
+  max-width: 150px;
+  min-width: 50px;
+  float: left;
+  margin: 15px;
+  display: inline-block;
+}
+.voting-card-content{
+  text-align: center;
+}
